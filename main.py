@@ -1,16 +1,9 @@
-# This is a sample Python script.
+from load_data import load_data_movies, load_data_ratings
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+a,b=load_data_movies('C:\\Users\\welre\\PycharmProjects\\TheRSBoys\\MovieLens_m1\\movies.dat')
+c,d=load_data_ratings('C:\\Users\\welre\\PycharmProjects\\TheRSBoys\\MovieLens_m1\\ratings.dat')
 
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+# print(a)
+# print(b)
+print(c)
+print(d)
