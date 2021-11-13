@@ -104,4 +104,4 @@ def load_data_movies(path):
     #     trainMovies = trainMovies.T
     #     validMovies = validMovies.T
 
-    return trainMovies, validMovies
+    return trainMovies, validMovies, movie_dict
