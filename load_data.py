@@ -1,4 +1,4 @@
-#THIS CODE IS SLIGHTLY INSPIRED FROM lkasfd
+# THIS CODE IS SLIGHTLY INSPIRED FROM lkasfd
 
 import numpy as np
 
@@ -7,7 +7,7 @@ def load_data_ratings(path):
     # seed randomness for testing purposes
     np.random.seed(0)
     # loading all data
-    data = np.loadtxt(path,delimiter='::').astype('int32')
+    data = np.loadtxt(path, delimiter='::').astype('int32')
 
     n_u = np.unique(data[:, 0]).shape[0]  # number of users
     n_m = np.unique(data[:, 1]).shape[0]  # number of movies
@@ -46,48 +46,56 @@ def load_data_ratings(path):
 
     return trainRatings, validRatings
 
+
 def load_data_movies(path):
     # seed randomness for testing purposes
     np.random.seed(0)
     # loading all data
-    data = np.loadtxt(path, dtype='string', delimiter='::')
+    data = np.genfromtxt(path, dtype='str', delimiter='::', usecols=(0, 2))
 
-    n_u = np.unique(data[:, 0]).shape[0]  # number of users
-    n_m = np.unique(data[:, 1]).shape[0]  # number of movies
-    n_r = data.shape[0]  # number of ratings
-
-    # these dictionaries define a mapping from user/movie id to to user/movie number (contiguous from zero)
+    nmoviesid = np.unique(data[:, 0]).shape[0]  # number of movie ids
+    # ngenres = np.unique(data[:, 1]).shape[0]  # number of genres
+    nmovies = data.shape[0]  # number of movies
+    # print(nmoviesid)
+    # these dictionaries define a mapping from genre to movieid and
     title_dict = {}
     for i, u in enumerate(np.unique(data[:, 0]).tolist()):
         title_dict[u] = i
     genre_dict = {}
+    # divide genres more
+    ngenres = 0 #number of genres
     for i, m in enumerate(np.unique(data[:, 1]).tolist()):
-        genre_dict[m] = i
+        m = m.split("|")
+        # print(m)
+        for word in m:
+            if word not in genre_dict:
+                genre_dict[word] = ngenres
+                ngenres = ngenres + 1
 
+
+    print(genre_dict)
     print(title_dict)
-    exit(0)
     # shuffle indices
-    idx = np.arange(n_r)
+    idx = np.arange(nmovies)
     np.random.shuffle(idx)
 
-    trainRatings = np.zeros((n_u, n_m), dtype='float32')
-    validRatings = np.zeros((n_u, n_m), dtype='float32')
+    trainMovies = np.zeros((nmoviesid, ngenres), dtype='float32')
+    validMovies = np.zeros((nmoviesid, ngenres), dtype='float32')
 
-    for i in range(n_r):
-        title_dict = data[idx[i], 0]
-        genre_dict = data[idx[i], 1]
-        r = data[idx[i], 2]
-
+    for i in range(nmovies):
+        title_id = data[idx[i], 0]
+        genre_id = data[idx[i], 1]
+        # r = data[idx[i], 2]
         # the first few ratings of the shuffled data array are validation data
-        if i <= 0.1 * n_r:
-            validRatings[title_dict[title_id], genre_dict[genre_id]] = int(r)
-        # the rest are training data
-        else:
-            trainRatings[title_dict[title_id], genre_dict[genre_id]] = int(r)
+        for word in genre_id.split("|"):
+            if i <= 0.1 * nmovies:
+                trainMovies[title_dict[title_id], genre_dict[word]] = 1
+            # the rest are training data
+            else:
+                validMovies[title_dict[title_id], genre_dict[word]] = 1
 
     # if transpose:
     #     trainRatings = trainRatings.T
     #     validRatings = validRatings.T
 
-    return trainRatings, validRatings
-
+    return trainMovies, validMovies
