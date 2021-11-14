@@ -20,7 +20,9 @@ def load_data_ratings(path):
     mdict = {}
     for i, m in enumerate(np.unique(data[:, 1]).tolist()):
         mdict[m] = i
+    revmdict = {v: k for k, v in mdict.items()}
 
+    exit(0)
     # shuffle indices
     idx = np.arange(n_r)
     np.random.shuffle(idx)
@@ -44,7 +46,7 @@ def load_data_ratings(path):
     #     trainRatings = trainRatings.T
     #     validRatings = validRatings.T
 
-    return trainRatings, validRatings
+    return trainRatings, validRatings, revmdict
 
 
 def load_data_movies(path):
@@ -63,7 +65,6 @@ def load_data_movies(path):
     for i in range(len(data[:, ])):
         movie_dict[int(data[i][0])] = data[i, 1]
 
-    title_dict = {v: k for k, v in movie_dict.items()}
     # print(title_dict)
     genre_dict = {}
     # divide genres more

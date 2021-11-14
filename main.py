@@ -5,7 +5,7 @@ dirname = os.path.dirname(__file__)
 movies_file = os.path.join(dirname, 'MovieLens_m1/movies.dat')
 ratings_file = os.path.join(dirname, 'MovieLens_m1/ratings.dat')
 
-#a,b=load_data_movies(movies_file)
+a,b,c=load_data_movies(movies_file)
 c,d=load_data_ratings(ratings_file)
 
 # print(a)
