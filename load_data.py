@@ -182,4 +182,4 @@ def load_data(path1, path2):
         else:
             trainRatings[udict[u_id], m_id] = int(r)
 
-    return trainMovies, validMovies, trainRatings, validMovies
+    return trainMovies, validMovies, trainRatings, validRatings
