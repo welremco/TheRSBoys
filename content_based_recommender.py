@@ -24,12 +24,19 @@ def recommend(id, amount):
     ## create the cosine similarity matrix
     similarity_matrix = linear_kernel(tfidf_matrix, tfidf_matrix)
     # print(similarity_matrix.shape)
-    # print(similarity_matrix)
+    #print(similarity_matrix)
 
     movie_list = list(enumerate(similarity_matrix[int(id)]))
     similar_movies = list(filter(lambda x: x[0] != int(id), sorted(movie_list, key=lambda x: x[1], reverse=True)))
     print('Here\'s the list of movies similar to ' + data[id][1] + '    (' + data[id][2] + ') :')
+    print(' ')
+    #print(similar_movies[0][1])
     for i, s in similar_movies[:amount]:
-        print(data[i][1] + '    (' + data[i][2] + ')')
+        #print('i  ', i)
+        #print('s  ', s)
+        #print('m  ', similarity_matrix[i,id])
+        print(data[i][1] + ' Similarity:', s ,  '   (' + data[i][2] + ')')
+        #print(' ')
+
 
 
