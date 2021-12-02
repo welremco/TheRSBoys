@@ -85,11 +85,17 @@ def recommend(amount, user_id):
     print('Here\'s the list of movies similar to selected based on movies you rated 5 stars :')
     print(' ')
 
+    # print(similar_movies_user.__len__())
+    # for seen in seen_list:
+    #    for rec in
+
+
     for i, s, mid in similar_movies_user[:amount]:
         # print('i  ', i)
         # print('s  ', s)
         # print('m  ', similarity_matrix[i,id])
         print(data_movies[i][1] + ' Similarity:', s,  '   (' + data_movies[i][2] + ') - movieID: ', mid)
+        print(i, ' ', s, ' ', mid)
         # print(' ')
 
 
