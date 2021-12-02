@@ -41,5 +41,7 @@ def load_data(path):
         data[i][2] = final_changed
         #print(data[i][2])
 
-
+    #print(data[257][0])
+    #print(data[257][1])
+    #print(data[257][2])
     return data
