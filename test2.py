@@ -19,9 +19,9 @@ similarity_matrix = hk.load_similarity_matrix()
 for x in range(3):
     # ask for user id
     print('asking for input')
-    user_id = int(input("Please enter a movie id: "))
+    user_id = int(input("Please enter a user id: "))
     # content based
-    cb_scores = recommend(user_id, 10)
+    cb_scores = recommend(10, user_id)
     # collaborative
     cf_scores = hk.get_cf_results(similarity_matrix, np.transpose(train_movie_ratings), movie_names, user_id)
     # combination

@@ -81,13 +81,11 @@ def get_cf_results(similarity_matrix, ratings, movie_names, user_id):
         if rating not in (0, 3) and movie_id in movie_names:
             similarity_array = similarity_matrix[movie_id]
             for i in range(len(similarity_array)):
-                if similarity_array[i] != 0:
-                    # take out movies user with user_id watched
-                    if movie_id not in watched_movies:
-                        if movie_id not in recommendations:
-                            recommendations[movie_id] = similarity_array[i]*((rating-3)/2)
-                        else:
-                            recommendations[movie_id] += similarity_array[i]*((rating-3)/2)
+                if similarity_array[i] != 0 and i not in watched_movies:
+                    if i not in recommendations:
+                        recommendations[i] = similarity_array[i]*((rating-3)/2)
+                    else:
+                        recommendations[i] += similarity_array[i]*((rating-3)/2)
     # divide all values by largest absolute value in recommendations
     max_abs = 0
     for movie_id in recommendations:
