@@ -78,14 +78,14 @@ def get_cf_results(similarity_matrix, ratings, movie_names, user_id):
     watched_movies = np.nonzero(ratings[:, user_id])[0]
     for movie_id in range(len(ratings[:, user_id])):
         rating = ratings[movie_id, user_id]
-        if rating not in (0, 3) and movie_id in movie_names:
+        if rating != 0 and movie_id in movie_names:
             similarity_array = similarity_matrix[movie_id]
             for i in range(len(similarity_array)):
                 if similarity_array[i] != 0 and i not in watched_movies:
                     if i not in recommendations:
-                        recommendations[i] = similarity_array[i]*((rating-3)/2)
+                        recommendations[i] = similarity_array[i]*rating  # *((rating-3)/2)
                     else:
-                        recommendations[i] += similarity_array[i]*((rating-3)/2)
+                        recommendations[i] += similarity_array[i]*rating  # *((rating-3)/2)
     # divide all values by largest absolute value in recommendations
     max_abs = 0
     for movie_id in recommendations:

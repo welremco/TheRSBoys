@@ -79,4 +79,15 @@ def load_data(path1, path2):
         else:
             trainRatings[udict[u_id], m_id] = int(r)
 
+    # get average rating in every column of trainRatings excluding zero ratings
+    average = np.zeros((nusers, 1), dtype='float32')
+    for i in range(nusers):
+        if np.count_nonzero(trainRatings[i, :]) > 0:
+            average[i] = np.mean(trainRatings[i, trainRatings[i, :] != 0])
+        else:
+            average[i] = 0
+    # subtract average from every column of trainRatings except zero ratings
+    for i in range(nusers):
+        trainRatings[i, trainRatings[i, :] != 0] = trainRatings[i, trainRatings[i, :] != 0] - average[i]
+
     return trainMovies, validMovies, trainRatings, validRatings, movie_dict
