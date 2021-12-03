@@ -75,17 +75,25 @@ def get_cf_results(similarity_matrix, ratings, movie_names, user_id):
     :return: sorted list of tuples of form (movie_name, predicted_rating)
     """
     recommendations = {}
+    watched_movies = np.nonzero(ratings[:, user_id])[0]
     for movie_id in range(len(ratings[:, user_id])):
         rating = ratings[movie_id, user_id]
-        if rating != 0 and movie_id in movie_names:
+        if rating not in (0, 3) and movie_id in movie_names:
             similarity_array = similarity_matrix[movie_id]
             for i in range(len(similarity_array)):
                 if similarity_array[i] != 0:
-                    # TODO determine aggregation method for similarity scores
-                    # now just adds them together
-                    if movie_names[i] not in recommendations:
-                        recommendations[movie_names[i]] = similarity_array[i]
-                    else:
-                        recommendations[movie_names[i]] += similarity_array[i]
-    print({k: v for k, v in sorted(recommendations.items(), key=lambda item: item[1])})
-    return {k: v for k, v in sorted(recommendations.items(), key=lambda item: item[1], reverse=True)}
+                    # take out movies user with user_id watched
+                    if movie_id not in watched_movies:
+                        if movie_id not in recommendations:
+                            recommendations[movie_id] = similarity_array[i]*((rating-3)/2)
+                        else:
+                            recommendations[movie_id] += similarity_array[i]*((rating-3)/2)
+    # divide all values by largest absolute value in recommendations
+    max_abs = 0
+    for movie_id in recommendations:
+        if abs(recommendations[movie_id]) > max_abs:
+            max_abs = abs(recommendations[movie_id])
+    for movie_id in recommendations:
+        recommendations[movie_id] /= max_abs
+
+    return [(k, v) for k, v in sorted(recommendations.items(), key=lambda item: item[1], reverse=True)]

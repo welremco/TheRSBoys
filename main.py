@@ -15,5 +15,5 @@ print("Loading precomputed similarity matrix...")
 similarity_matrix = hk.load_similarity_matrix()
 while True:
     user_id = int(input("Enter user id: "))
-    scores_dict = hk.get_cf_results(similarity_matrix, np.transpose(train_movie_ratings), movie_names, user_id)
-    print(scores_dict)
+    scores_list = hk.get_cf_results(similarity_matrix, np.transpose(train_movie_ratings), movie_names, user_id)
+    print(scores_list)
