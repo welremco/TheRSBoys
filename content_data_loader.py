@@ -21,17 +21,6 @@ def load_data(path):
         data[i][2] = changed
         #print(data[i][2])
 
-    #  count the number of occurences of each genre
-    genre_counts = dict()
-    for i in range(len(data[:, ])):
-        for g in data[i][2].split(' '):
-            #print(g)
-            if g not in genre_counts:
-                genre_counts[g] = 1
-            else:
-                genre_counts[g] = genre_counts[g] + 1
-    #print(len(genre_counts))
-
     #  remove spaces, apostrophes and hyphens
     for i in range(len(data[:, ])):
         extract = data[i][2]

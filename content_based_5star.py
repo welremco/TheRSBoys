@@ -43,8 +43,9 @@ def get_seen_movies(data_r, u_id):
     for item in data_r:
         # if rating was performed by user
         if int(item[0]) == int(u_id):
-            # append rating (uID, mID, rating) to list of seen movies
-            seen_list.append(item)
+            if(int(item[2]) == 5):
+                # append rating (uID, mID, rating) to list of seen movies
+                seen_list.append(item)
 
     return seen_list
 
@@ -70,17 +71,8 @@ def create_empty_scores_list(data_m):
 def compute_recommendations(list_seen, data_m, similarity_matrix, scores):
     # for each seen movie
     for seen in list_seen:
-        # decide weight based on score the movie was given by user
-        if int(seen[2]) == 5:
-            w = 1
-        elif int(seen[2]) == 4:
-            w = 0.5
-        elif int(seen[2]) == 3:
-            w = 0
-        elif int(seen[2]) == 2:
-            w = -0.5
-        elif int(seen[2]) == 1:
-            w = -1
+        # decide weight based on score
+        # NOT DONE HERE, ONLY 5stars considered
         # for each movie in the dataset
         for index in range(len(data_m)):
             movie = data_m[index]
@@ -94,7 +86,7 @@ def compute_recommendations(list_seen, data_m, similarity_matrix, scores):
                     # get the tuple to edit
                     to_replace = scores[score_tuple]
                     # compute score to add by looking at similarity matrix and multiplying by weight
-                    score_to_add = current_list[score_tuple][1] * w
+                    score_to_add = current_list[score_tuple][1]
                     # computed score to already present sum of scores
                     new_score_sum = to_replace[1] + score_to_add
                     # create new tuple with new sum
