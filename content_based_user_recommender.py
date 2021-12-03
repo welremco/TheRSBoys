@@ -86,7 +86,7 @@ def compute_recommendations(list_seen, data_m, similarity_matrix, scores):
             movie = data_m[index]
             # if they are the same
             if int(seen[1]) == int(movie[0]):
-                print('seen: ', seen, '  index: ', index, ' -- ', movie)
+                # print('seen: ', seen, '  index: ', index, ' -- ', movie)
                 # get the similarity scores for this movie with all other movies
                 current_list = list(enumerate(similarity_matrix[int(index)]))
                 # for each scores_tuple in the list of all moviescores add weighted score to scoresum
@@ -174,14 +174,14 @@ def recommend(amount, user_id):
 
     # some printstatements for testing
     print(' ')
-    print('Here\'s the list of movies similar to selected based on movies you rated in the past :')
+    # print('Here\'s the list of movies similar to selected based on movies you rated in the past :')
     print(' ')
-    for i, s, mid in similar_movies_user[:amount]:
+    #for i, s, mid in similar_movies_user[:amount]:
         # print('i  ', i)
         # print('s  ', s)
         # print('m  ', similarity_matrix[i,id])
-        print(data_movies[i][1] + ' Similarity:', s,  '   (' + data_movies[i][2] + ') - movieID: ', mid)
-        print(i, ' ', s, ' ', mid)
+        # print(data_movies[i][1] + ' Similarity:', s,  '   (' + data_movies[i][2] + ') - movieID: ', mid)
+        # print(i, ' ', s, ' ', mid)
         # print(' ')
 
 
