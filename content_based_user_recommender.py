@@ -119,6 +119,7 @@ def average_scores(list_seen, list_scores):
 
     return list_scores
 
+
 def remove_seen(seen_list, sorted_list):
 
     # for each seen movie
@@ -130,6 +131,7 @@ def remove_seen(seen_list, sorted_list):
                 sorted_list.remove(remove)
 
     return sorted_list
+
 
 def convert_output(sorted_scores_list):
 
@@ -152,7 +154,7 @@ def recommend(amount, user_id):
     # create the similarity matrix
     similarity_matrix = create_similarity_matrix(data_movies)
 
-    # create list of seen movies aka movies a user has rated (5stars for now)
+    # create list of seen movies so the movies the user has rated
     seen_list = get_seen_movies(data_ratings, user_id)
 
     # create list to hold scores and fill with empty tuples
@@ -185,6 +187,7 @@ def recommend(amount, user_id):
 
     # create output list in agreed format [(id, score), (id, score), ...] (so without original dataindex
     output = convert_output(similar_movies_user)
+    return output
 
     print(output)
 
