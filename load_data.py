@@ -2,6 +2,8 @@
 
 import numpy as np
 
+np.random.seed(0)
+
 
 def load_data(path1, path2):
     np.random.seed(0)
@@ -30,7 +32,7 @@ def load_data(path1, path2):
 
 
     idx = np.arange(nmovies)
-    # np.random.shuffle(idx)
+    np.random.shuffle(idx)
     trainMovies = np.zeros((int(data1[nmoviesid - 1][0]) + 1, ngenres), dtype='float32')
     validMovies = np.zeros((int(data1[nmoviesid - 1][0]) + 1, ngenres), dtype='float32')
 
@@ -63,7 +65,7 @@ def load_data(path1, path2):
 
     # shuffle index around
     idx = np.arange(nratings)
-    # np.random.shuffle(idx)
+    np.random.shuffle(idx)
 
     trainRatings = np.zeros((nusers, int(data1[nmoviesid - 1][0]) + 1), dtype='float32')
     validRatings = np.zeros((nusers, int(data1[nmoviesid - 1][0]) + 1), dtype='float32')
