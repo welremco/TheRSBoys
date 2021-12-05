@@ -189,5 +189,5 @@ def recommend(amount, user_id):
     output = convert_output(similar_movies_user)
     return output
 
-    print(output)
+
 

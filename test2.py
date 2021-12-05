@@ -22,8 +22,11 @@ for x in range(3):
     user_id = int(input("Please enter a user id: "))
     # content based
     cb_scores = recommend(10, user_id)
+    print('original: ', train_movie_ratings.size)
+    print('cb:   ', cb_scores)
     # collaborative
     cf_scores = hk.get_cf_results(similarity_matrix, np.transpose(train_movie_ratings), movie_names, user_id)
+    print('cf:   ', cf_scores)
     # combination
     final_output = hybrid_cf_cb_combinator.combine(cf_scores, 0.5, cb_scores, 0.5)
     print(final_output)

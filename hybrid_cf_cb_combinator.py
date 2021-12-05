@@ -9,7 +9,7 @@ def combine(cf_s, cf_w, cb_s, cb_w):
             if int(cf_s[cf][0]) == int(cb_s[cb][0]):
                 cb_score = cb_s[cb][1] * cb_w
                 #print(cb_score)
-                print(cf_score, '  -- ', cb_score)
+                # print(cf_score, '  -- ', cb_score)
                 final_score = cf_score + cb_score
                 #print(final_score)
                 final_score_tuple = (cf_s[cf][0], final_score)
