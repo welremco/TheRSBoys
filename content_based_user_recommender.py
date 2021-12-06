@@ -3,8 +3,9 @@ from content_data_user_loader import load_data_ratings
 import os
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel
+import numpy as np
 
-def load():
+def load(train):
 
     # generate filepaths
     dirname = os.path.dirname(__file__)
@@ -15,6 +16,12 @@ def load():
     movies = load_data(movies_file)
     # load ratings (userID, movieID, rating)
     ratings = load_data_ratings(ratings_file)
+    for i in range(len(ratings)):
+        idU = ratings[i][0]
+        m = ratings[i][1]
+        s = train[int(idU) - 1,int(m)]
+        ratings[i][2] = s
+        #print(ratings[i])
 
     return movies, ratings
 
@@ -71,16 +78,7 @@ def compute_recommendations(list_seen, data_m, similarity_matrix, scores):
     # for each seen movie
     for seen in list_seen:
         # decide weight based on score the movie was given by user
-        if int(seen[2]) == 5:
-            w = 1
-        elif int(seen[2]) == 4:
-            w = 0.5
-        elif int(seen[2]) == 3:
-            w = 0
-        elif int(seen[2]) == 2:
-            w = -0.5
-        elif int(seen[2]) == 1:
-            w = -1
+        w = float(seen[2])
         # for each movie in the dataset
         for index in range(len(data_m)):
             movie = data_m[index]
@@ -156,10 +154,10 @@ def convert_output(sorted_scores_list):
     return output
 
 
-def recommend(amount, user_id):
+def recommend(amount, user_id, train):
 
     # load data from files
-    data_movies, data_ratings = load()
+    data_movies, data_ratings = load(train)
 
     # create the similarity matrix
     similarity_matrix = create_similarity_matrix(data_movies)
@@ -184,15 +182,13 @@ def recommend(amount, user_id):
 
     # some printstatements for testing
     print(' ')
-    # print('Here\'s the list of movies similar to selected based on movies you rated in the past :')
+    print('Here\'s the list of movies similar to selected based on movies you rated in the past :')
     print(' ')
-    #for i, s, mid in similar_movies_user[:amount]:
-        # print('i  ', i)
-        # print('s  ', s)
-        # print('m  ', similarity_matrix[i,id])
-        # print(data_movies[i][1] + ' Similarity:', s,  '   (' + data_movies[i][2] + ') - movieID: ', mid)
-        # print(i, ' ', s, ' ', mid)
-        # print(' ')
+    print(similarity_matrix.shape)
+    for i, s, mid in similar_movies_user[:amount]:
+        print(data_movies[i][1] + ' Similarity:', s,  '   (' + data_movies[i][2] + ') - movieID: ', mid)
+        print(i, ' ', s, ' ', mid)
+        print(' ')
 
 
     # create output list in agreed format [(id, score), (id, score), ...] (so without original dataindex

@@ -21,7 +21,7 @@ for x in range(3):
     print('asking for input')
     user_id = int(input("Please enter a user id: "))
     # content based
-    cb_scores = recommend(10, user_id)
+    cb_scores = recommend(10, user_id, train_movie_ratings)
     print('original: ', train_movie_ratings.size)
     print('cb:   ', cb_scores)
     # collaborative

@@ -22,7 +22,7 @@ def get_all_user_lists(groupsize):
         user_id = int(input("Please enter a user id:  "))
         # content based
         cb_scores = recommend(10, user_id)
-        print('cb:   ', cb_scores)
+        print('cb:   ', cb_scores, train_movie_ratings)
         # collaborative
         cf_scores = hk.get_cf_results(similarity_matrix, np.transpose(train_movie_ratings), movie_names, user_id)
         print('cf:   ', cf_scores)
