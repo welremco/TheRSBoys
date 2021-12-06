@@ -22,7 +22,7 @@ def cosine_similarity_array(movie_ratings, index, movie_ratings_nonzero):
             if len(rj) > 100:
                 ids = np.intersect1d(ri, rj, assume_unique=True)
                 # TODO tune amount of users that need to have rated both movies
-                if len(ids) > 10:
+                if len(ids) > 100:
                     movie_i_nonzero_ratings = movie_i_ratings[ids]
                     movie_j_nonzero_ratings = movie_j_ratings[ids]
                     similarity[j] = faster_cosine_similarity(movie_i_nonzero_ratings, movie_j_nonzero_ratings)
@@ -56,7 +56,8 @@ def load_similarity_matrix(calculate=False, train_ratings=None):
         print("preprocessing matrix...")
         similarity_matrix = np.zeros((len(train_ratings_t), len(train_ratings_t)), dtype=np.float16)
         for i in range(len(train_ratings_t)):
-            print(i)
+            if i % 100 == 0:
+                print(i)
             similarity_matrix[i] = cosine_similarity_array(train_ratings_t, i, movie_ratings_nonzero)
 
         np.save("similarity_matrix.npy", similarity_matrix)
@@ -75,7 +76,8 @@ def get_cf_results(similarity_matrix, ratings, movie_names, user_id):
     :return: sorted list of tuples of form (movie_name, predicted_rating)
     """
     recommendations = {}
-    watched_movies = np.nonzero(ratings[:, user_id])[0]
+    watched_movies = np.array([1])
+    # watched_movies = np.nonzero(ratings[:, user_id])[0]
     for movie_id in range(len(ratings[:, user_id])):
         rating = ratings[movie_id, user_id]
         if rating != 0 and movie_id in movie_names:
@@ -95,3 +97,31 @@ def get_cf_results(similarity_matrix, ratings, movie_names, user_id):
         recommendations[movie_id] /= max_abs
 
     return [(k, v) for k, v in sorted(recommendations.items(), key=lambda item: item[1], reverse=True)]
+
+
+def AP(actual, predicted, n=10, min_rating=0):
+    """
+    Calculate average precision
+    :param actual: list of tuples of form (movie_id, rating) sorted by highest rating
+    :param predicted: list of tuples of form (movie_id, rating) sorted by highest rating
+    :param n: number of top recommendations to consider
+    :param min_rating: minimum rating to consider
+    :return: average precision
+    """
+    n = min(n, len(actual))
+    predicted_list = [p[0] for p in predicted[:n]]
+    actual_list = [a[0] for a in actual if a[1] >= min_rating]
+    average_precision = 0
+    for k in range(n):
+        print(predicted_list[k])
+        print(actual_list[:k+1])
+        if predicted_list[k] in actual_list[:k+1]:
+            correct = len(set(actual_list[:k+1]).intersection(set(predicted_list[:k+1])))
+            average_precision += correct/(k+1)
+            print(correct/(k+1))
+    return average_precision/len(actual_list)
+
+
+
+
+

@@ -18,7 +18,7 @@ def combine(cf_s, cf_w, cb_s, cb_w):
                 final_scores.append(final_score_tuple)
                 is_present = 1
         if is_present == 0:
-            final_score_tuple = (cb_s[cb][0], cb_score)
+            final_score_tuple = (cb_s[cb][0], cb_score*1.5)
             final_scores.append(final_score_tuple)
 
 

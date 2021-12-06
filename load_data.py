@@ -76,7 +76,7 @@ def load_data(path1, path2):
         r = data2[idx[i], 2]
 
         # Validation
-        if i <= 0.1 * nratings:
+        if i <= 0.2 * nratings:
             validRatings[udict[u_id], m_id] = int(r)
         else:
             trainRatings[udict[u_id], m_id] = int(r)
