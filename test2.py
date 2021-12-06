@@ -18,7 +18,7 @@ train_movie_genres, valid_movie_genres, train_movie_ratings, valid_movie_ratings
 # True, train_movie_ratings)
 similarity_matrix = hk.load_similarity_matrix(True, train_movie_ratings)
 
-for x in range(3):
+for x in range(100):
     # ask for user id
     print('asking for input')
     user_id = int(input("Please enter a user id: "))
@@ -41,6 +41,6 @@ for x in range(3):
     # sort list by rating
     valid_movie_list.sort(key=lambda tup: tup[1], reverse=True)
     print('valid: ', valid_movie_list[:10])
-    Ap = hybrid_kNN.AP(valid_movie_list, final_output, 100, 0)
+    Ap = hybrid_kNN.AP(valid_movie_list, final_output, 10, 3)
     print('AP: ', Ap)
 

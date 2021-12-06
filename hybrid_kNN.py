@@ -14,15 +14,15 @@ def cosine_similarity_array(movie_ratings, index, movie_ratings_nonzero):
     movie_i_ratings = movie_ratings[index]
     ri = movie_ratings_nonzero[index]
     # TODO tune amount of users that need to have rated a movie
-    if len(ri) > 100:
+    if len(ri) > 25:
         for j in range(len(movie_ratings)):
             movie_j_ratings = movie_ratings[j]
             rj = movie_ratings_nonzero[j]
             # TODO tune amount of users that need to have rated a movie
-            if len(rj) > 100:
+            if len(rj) > 25:
                 ids = np.intersect1d(ri, rj, assume_unique=True)
                 # TODO tune amount of users that need to have rated both movies
-                if len(ids) > 100:
+                if len(ids) > 25:
                     movie_i_nonzero_ratings = movie_i_ratings[ids]
                     movie_j_nonzero_ratings = movie_j_ratings[ids]
                     similarity[j] = faster_cosine_similarity(movie_i_nonzero_ratings, movie_j_nonzero_ratings)
@@ -108,18 +108,19 @@ def AP(actual, predicted, n=10, min_rating=0):
     :param min_rating: minimum rating to consider
     :return: average precision
     """
-    n = min(n, len(actual))
+    adjusted_n = min(n, len(actual))
     predicted_list = [p[0] for p in predicted[:n]]
     actual_list = [a[0] for a in actual if a[1] >= min_rating]
     average_precision = 0
+    correct = 0
     for k in range(n):
-        print(predicted_list[k])
-        print(actual_list[:k+1])
-        if predicted_list[k] in actual_list[:k+1]:
-            correct = len(set(actual_list[:k+1]).intersection(set(predicted_list[:k+1])))
-            average_precision += correct/(k+1)
-            print(correct/(k+1))
-    return average_precision/len(actual_list)
+        if predicted_list[k] in actual_list:
+            correct += 1
+            average_precision += correct/min((k+1), adjusted_n)
+            print(correct/min((k+1), adjusted_n))
+    if correct == 0:
+        return 0.0
+    return average_precision/correct
 
 
 
