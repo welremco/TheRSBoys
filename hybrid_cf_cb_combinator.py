@@ -2,12 +2,13 @@
 
 def combine(cf_s, cf_w, cb_s, cb_w):
     final_scores = []
-    for cf in range(len(cf_s)):
-        cf_score = cf_s[cf][1] * cf_w
+    for cb in range(len(cb_s)):
+        cb_score = cb_s[cb][1] * cb_w
         #print(cf_score)
-        for cb in range(len(cb_s)):
+        is_present = 0
+        for cf in range(len(cf_s)):
             if int(cf_s[cf][0]) == int(cb_s[cb][0]):
-                cb_score = cb_s[cb][1] * cb_w
+                cf_score = cf_s[cf][1] * cf_w
                 #print(cb_score)
                 # print(cf_score, '  -- ', cb_score)
                 final_score = cf_score + cb_score
@@ -15,6 +16,11 @@ def combine(cf_s, cf_w, cb_s, cb_w):
                 final_score_tuple = (cf_s[cf][0], final_score)
                 #print(final_score_tuple)
                 final_scores.append(final_score_tuple)
+                is_present = 1
+        if is_present == 0:
+            final_score_tuple = (cb_s[cb][0], cb_score)
+            final_scores.append(final_score_tuple)
+
 
     #print(final_scores)
     output = list(sorted(final_scores, key=lambda x: x[1], reverse=True))

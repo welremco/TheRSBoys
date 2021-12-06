@@ -5,14 +5,12 @@ import numpy as np
 import hybrid_kNN as hk
 import hybrid_cf_cb_combinator
 
-
 def ask_for_size():
 
     print('asking for input')
-    s = int(input("Please enter a group size:  "))
+    size = int(input("Please enter a group size:  "))
 
-    return s
-
+    return size
 
 def get_all_user_lists(groupsize):
 
@@ -32,7 +30,23 @@ def get_all_user_lists(groupsize):
         print('userlist length:   ', len(final_output))
         user_list_pair = (user_id, final_output)
         list_of_user_outputs.append(user_list_pair)
+
     return list_of_user_outputs
+
+
+def remove_misery(list_users, threshold):
+
+    for user in range(size):
+        i = 0
+        n = len(list_users[user][1])
+        while i < n:
+            if list_users[user][1][i][1] < threshold:
+                del list_users[user][1][i]
+                n = n - 1
+            else:
+                i = i + 1
+
+    return list_users
 
 
 def sum_user_scores(reduced_list, n):
@@ -55,7 +69,6 @@ def sum_user_scores(reduced_list, n):
                         summed[triplet] = new_triplet
 
     tuples = []
-
     for summed_triplet in summed:
         if summed_triplet[2] == n:
             mID = summed_triplet[0]
@@ -77,6 +90,7 @@ def average(sums, n):
     return sums
 
 
+
 # get filepaths
 dirname = os.path.dirname(__file__)
 movies_file = os.path.join(dirname, 'MovieLens_m1/movies.dat')
@@ -90,11 +104,11 @@ similarity_matrix = hk.load_similarity_matrix()
 
 size = ask_for_size()
 
-list_of_outputs = get_all_user_lists(size)
+list_of_user_outputs = get_all_user_lists(size)
 
-# no_misery = remove_misery(list_of_user_outputs, 0.3)
+no_misery = remove_misery(list_of_user_outputs, 0.3)
 
-summed_scores = sum_user_scores(list_of_outputs, size)
+summed_scores = sum_user_scores(no_misery, size)
 
 averaged_scores = average(summed_scores, size)
 sorted_scores = list(sorted(averaged_scores, key=lambda x: x[1], reverse=True))
