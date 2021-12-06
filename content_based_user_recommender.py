@@ -181,14 +181,14 @@ def recommend(amount, user_id, train):
     remove_seen(seen_list, similar_movies_user)
 
     # some printstatements for testing
-    print(' ')
-    print('Here\'s the list of movies similar to selected based on movies you rated in the past :')
-    print(' ')
-    print(similarity_matrix.shape)
-    for i, s, mid in similar_movies_user[:amount]:
-        print(data_movies[i][1] + ' Similarity:', s,  '   (' + data_movies[i][2] + ') - movieID: ', mid)
-        print(i, ' ', s, ' ', mid)
-        print(' ')
+    # print(' ')
+    # print('Here\'s the list of movies similar to selected based on movies you rated in the past :')
+    # print(' ')
+    # print(similarity_matrix.shape)
+    # for i, s, mid in similar_movies_user[:amount]:
+        # print(data_movies[i][1] + ' Similarity:', s,  '   (' + data_movies[i][2] + ') - movieID: ', mid)
+        # print(i, ' ', s, ' ', mid)
+        # print(' ')
 
 
     # create output list in agreed format [(id, score), (id, score), ...] (so without original dataindex
