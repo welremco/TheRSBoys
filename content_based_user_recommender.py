@@ -108,23 +108,19 @@ def average_scores(list_seen, list_scores):
     # count the amount of seen movies
     count = len(list_seen)
 
-    # for each tuple in the scoreslist divide the score by the count of seen movies to get a score between 0-1
-    for cntr in range(len(list_scores)):
-        to_divide = list_scores[cntr][1]
-        final_score = to_divide / count
-        new_final_score_tuple = (cntr, final_score, list_scores[cntr][2])
-        list_scores[cntr] = new_final_score_tuple
-
     max_score = list_scores[0][1]
     for score in list_scores:
         if score[1] > max_score:
             max_score = score[1]
 
-    for normalise in range(len(list_scores)):
-        to_divide = list_scores[normalise][1]
-        final_score = to_divide / max_score
-        new_final_score_tuple = (normalise, final_score, list_scores[normalise][2])
-        list_scores[normalise] = new_final_score_tuple
+    if count != 0:
+        for normalise in range(len(list_scores)):
+            to_divide = list_scores[normalise][1]
+            averaged = to_divide / count
+            final_score = averaged / max_score
+            new_final_score_tuple = (normalise, final_score, list_scores[normalise][2])
+            list_scores[normalise] = new_final_score_tuple
+
     return list_scores
 
 
