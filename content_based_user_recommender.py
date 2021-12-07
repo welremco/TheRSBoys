@@ -198,7 +198,9 @@ def recommend(amount, user_id, movies, ratings, sim_matrix):
 
     # create output list in agreed format [(id, score), (id, score), ...] (so without original dataindex
     output = convert_output(similar_movies_user)
-    return output
+    # convert output to dictionary
+    output_dict = dict(output)
+    return output_dict
 
 
 

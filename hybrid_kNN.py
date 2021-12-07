@@ -96,7 +96,8 @@ def get_cf_results(similarity_matrix, ratings, movie_names, user_id):
     for movie_id in recommendations:
         recommendations[movie_id] /= max_abs
 
-    return [(k, v) for k, v in sorted(recommendations.items(), key=lambda item: item[1], reverse=True)]
+    # [(k, v) for k, v in sorted(recommendations.items(), key=lambda item: item[1], reverse=True)]
+    return recommendations
 
 
 def AP(actual, predicted, n=10, min_rating=0):
@@ -117,10 +118,33 @@ def AP(actual, predicted, n=10, min_rating=0):
         if predicted_list[k] in actual_list:
             correct += 1
             average_precision += correct/min((k+1), adjusted_n)
-            print(correct/min((k+1), adjusted_n))
+            # print(correct/min((k+1), adjusted_n))
     if correct == 0:
         return 0.0
     return average_precision/correct
+
+
+def get_top_rated_movies(ratings, movie_names, user_id, n=10):
+    """
+    return top rated movies that user has not watched
+    :param ratings: 2d array of size (num_movies, num_users)
+    :param movie_names: list of movie names
+    :param user_id: user id to get recommendations for
+    :param n: number of top movies to return
+    :return: list of tuples of form (movie_id, rating)
+    """
+    top_rated_movies = []
+    for i in range(len(ratings[:, user_id])):
+        if ratings[i, user_id] == 0 and i in movie_names:
+            # get average rating for movie i from ratings array not counting 0 ratings
+            nonzero_ratings = np.nonzero(ratings[i])[0]
+            if len(nonzero_ratings) >= 200:
+                average_rating = np.mean(ratings[i, nonzero_ratings])
+                top_rated_movies.append((i, average_rating))
+    top_rated_movies = sorted(top_rated_movies, key=lambda x: x[1], reverse=True)
+    # print(len(top_rated_movies))
+    return top_rated_movies[:n]
+
 
 
 
