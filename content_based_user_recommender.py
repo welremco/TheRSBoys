@@ -150,13 +150,14 @@ def convert_output(sorted_scores_list):
     return output
 
 
-def recommend(amount, user_id, train):
+def recommend(amount, user_id, movies, ratings, sim_matrix):
 
     # load data from files
-    data_movies, data_ratings = load(train)
+    data_movies = movies
+    data_ratings = ratings
 
     # create the similarity matrix
-    similarity_matrix = create_similarity_matrix(data_movies)
+    similarity_matrix = sim_matrix
 
     # create list of seen movies so the movies the user has rated
     seen_list = get_seen_movies(data_ratings, user_id)
