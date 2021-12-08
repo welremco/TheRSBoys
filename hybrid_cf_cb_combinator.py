@@ -1,11 +1,20 @@
 
 
-def combine(cf_s, cf_w, cb_s, cb_w):
+def combine(b_s, b_w, cf_s, cf_w, cb_s, cb_w):
     # combine dictionary scores of cf_s and and cb_s with weights cf_w and cb_w respectively
     combined = {}
     for key in cb_s:
         int_key = int(key)
-        combined[int_key] = cb_s[key] * cb_w + (cf_s[int_key] * cf_w if int_key in cf_s else cb_s[key] * cb_w * 0.5)
+        if int_key in b_s:
+            combined[int_key] = b_s[int_key] * b_w
+            if int_key in cf_s:
+                combined[int_key] += cf_s[int_key] * cf_w
+            else:
+                combined[int_key] += cb_s[key] * cb_w
+        elif key in cf_s:
+            combined[int_key] = cf_s[int_key] * cf_w
+        else:
+            combined[int_key] = cb_s[key] * cb_w
     # convert combined dictionary to list of tuples
     combined_list = []
     for key in combined:

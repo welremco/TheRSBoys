@@ -48,10 +48,10 @@ def hybrid_recommend(user_id, num_predictions=NUM_PREDICTIONS):
         num = 0
         total = 0
         total_baseline = 0
-        for u in range(1450, 1550):
+        for u in range(100, 200):
             user_id = u
-            if u % 1 == 0 and u - 1450 != 0:
-                print('iteration: ', u - 1450)
+            if u % 1 == 0 and u - 100 != 0:
+                print('iteration: ', u - 100)
                 # print('mAP:', mAP/num)
             # get list of tuples [(movie_id, rating), (movie_id, rating), ...] for valid_movie_ratings for user_id
             valid_movie_list = []
@@ -65,7 +65,7 @@ def hybrid_recommend(user_id, num_predictions=NUM_PREDICTIONS):
                 valid_movie_list.sort(key=lambda tup: tup[1], reverse=True)
                 # print('valid: ', valid_movie_list[:NUM_PREDICTIONS])
 
-                top_10 = hybrid_kNN.get_top_rated_movies(np.transpose(train_movie_ratings), movie_names, user_id, NUM_PREDICTIONS)
+                baseline = hybrid_kNN.get_top_rated_movies(np.transpose(train_movie_ratings), movie_names, user_id)
 
                 cb_scores = recommend(10, user_id, movies, ratings, similarity_matrix_cb)
                 # print('original: ', train_movie_ratings.size)
@@ -74,15 +74,15 @@ def hybrid_recommend(user_id, num_predictions=NUM_PREDICTIONS):
                 cf_scores = hk.get_cf_results(similarity_matrix, np.transpose(train_movie_ratings), movie_names, user_id)
                 # print('cf:   ', cf_scores)
                 # combination
-                final_output = hybrid_cf_cb_combinator.combine(cf_scores, 0.5, dict(top_10), 0.5)
+                final_output = hybrid_cf_cb_combinator.combine(dict(baseline), 0, cf_scores, 0.8, cb_scores, 0)
 
-                Ap = hybrid_kNN.AP(valid_movie_list, final_output, NUM_PREDICTIONS, 3)
-                Ap_baseline = hybrid_kNN.AP(valid_movie_list, top_10, NUM_PREDICTIONS, 3)
+                Ap = hybrid_kNN.AP(valid_movie_list, final_output, NUM_PREDICTIONS, 4)
+                Ap_baseline = hybrid_kNN.AP(valid_movie_list, baseline, NUM_PREDICTIONS, 4)
                 total += Ap
                 total_baseline += Ap_baseline
                 num += 1
-                print('AP: ', Ap, total/num)
-                print('AP_baseline: ', Ap_baseline, total_baseline/num)
+                print('mAP: ', Ap, total/num)
+                print('mAP_baseline: ', Ap_baseline, total_baseline/num)
                 mAP += Ap
         mAP /= num
         print(mAP)

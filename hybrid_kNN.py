@@ -124,13 +124,12 @@ def AP(actual, predicted, n=10, min_rating=0):
     return average_precision/correct
 
 
-def get_top_rated_movies(ratings, movie_names, user_id, n=10):
+def get_top_rated_movies(ratings, movie_names, user_id):
     """
     return top rated movies that user has not watched
     :param ratings: 2d array of size (num_movies, num_users)
     :param movie_names: list of movie names
     :param user_id: user id to get recommendations for
-    :param n: number of top movies to return
     :return: list of tuples of form (movie_id, rating)
     """
     top_rated_movies = []
@@ -143,7 +142,7 @@ def get_top_rated_movies(ratings, movie_names, user_id, n=10):
                 top_rated_movies.append((i, average_rating))
     top_rated_movies = sorted(top_rated_movies, key=lambda x: x[1], reverse=True)
     # print(len(top_rated_movies))
-    return top_rated_movies[:n]
+    return top_rated_movies
 
 
 
