@@ -85,13 +85,11 @@ def get_cf_results(similarity_matrix, ratings, movie_names, user_id):
             similarity_array = similarity_matrix[movie_id]
             for i in range(len(similarity_array)):
                 if similarity_array[i] != 0 and i not in watched_movies:
+                    score = similarity_array[i] * rating
                     if i not in recommendations:
-                        score = similarity_array[i] * rating
                         recommendations[i] = score
-                        if score > biggest_contributor[i][1]:
-                            biggest_contributor[i] = (movie_names[movie_id], score)
+                        biggest_contributor[i] = (movie_names[movie_id], score)
                     else:
-                        score = similarity_array[i] * rating
                         recommendations[i] += score
                         if score > biggest_contributor[i][1]:
                             biggest_contributor[i] = (movie_names[movie_id], score)
