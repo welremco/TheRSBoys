@@ -14,15 +14,15 @@ def cosine_similarity_array(movie_ratings, index, movie_ratings_nonzero):
     movie_i_ratings = movie_ratings[index]
     ri = movie_ratings_nonzero[index]
     # TODO tune amount of users that need to have rated a movie
-    if len(ri) > 25:
+    if len(ri) > 300:
         for j in range(len(movie_ratings)):
             movie_j_ratings = movie_ratings[j]
             rj = movie_ratings_nonzero[j]
             # TODO tune amount of users that need to have rated a movie
-            if len(rj) > 25:
+            if len(rj) > 300:
                 ids = np.intersect1d(ri, rj, assume_unique=True)
                 # TODO tune amount of users that need to have rated both movies
-                if len(ids) > 25:
+                if len(ids) > 300:
                     movie_i_nonzero_ratings = movie_i_ratings[ids]
                     movie_j_nonzero_ratings = movie_j_ratings[ids]
                     similarity[j] = faster_cosine_similarity(movie_i_nonzero_ratings, movie_j_nonzero_ratings)

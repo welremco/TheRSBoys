@@ -1,11 +1,11 @@
 import hybrid_kNN
-from content_based_user_recommender import recommend, load, create_similarity_matrix
+from content_based_user_recommender import recommend, load, create_similarity_matrix, print_explanation
 from load_data import load_data
 import os
 import numpy as np
 import hybrid_kNN as hk
 import hybrid_cf_cb_combinator
-from line_profiler_pycharm import profile
+# from line_profiler_pycharm import profile
 
 NUM_PREDICTIONS = 20
 
@@ -27,7 +27,7 @@ movies, ratings = load(train_movie_ratings)
 similarity_matrix_cb = create_similarity_matrix(movies)
 
 
-@profile
+# @profile
 def hybrid_recommend(user_id, num_predictions=NUM_PREDICTIONS):
     for x in range(1):
         # ask for user id
@@ -74,8 +74,14 @@ def hybrid_recommend(user_id, num_predictions=NUM_PREDICTIONS):
                 cf_scores = hk.get_cf_results(similarity_matrix, np.transpose(train_movie_ratings), movie_names, user_id)
                 # print('cf:   ', cf_scores)
                 # combination
-                final_output = hybrid_cf_cb_combinator.combine(dict(baseline), 0, cf_scores, 0.8, cb_scores, 0)
-
+                final_output = hybrid_cf_cb_combinator.combine(dict(baseline), 1, cf_scores, 1, cb_scores, 1)
+                print('recommendations : ', final_output)
+                if int(final_output[0][1][1]) == 1:
+                    print('This movie is recommended to you because it is very popular')
+                if int(final_output[0][1][1]) == 2:
+                    print('this is where the colaborative filtering explanation call must be')
+                if int(final_output[0][1][1]) == 3:
+                    print_explanation(final_output[0][0], user_id, movies, ratings, similarity_matrix_cb)
                 Ap = hybrid_kNN.AP(valid_movie_list, final_output, NUM_PREDICTIONS, 4)
                 Ap_baseline = hybrid_kNN.AP(valid_movie_list, baseline, NUM_PREDICTIONS, 4)
                 total += Ap

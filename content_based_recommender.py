@@ -3,7 +3,7 @@ import os
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel
 
-def recommend(id, amount):
+def recommend_single(id, amount):
 
     dirname = os.path.dirname(__file__)
     movies_file = os.path.join(dirname, 'MovieLens_m1/movies.dat')

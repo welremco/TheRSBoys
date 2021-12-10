@@ -1,5 +1,6 @@
 from content_data_loader import load_data
 from content_data_user_loader import load_data_ratings
+from content_based_recommender import recommend_single
 import os
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel
@@ -157,6 +158,40 @@ def convert_output(sorted_scores_list):
 
     return output
 
+def print_explanation(movie_id, user_id, movies, ratings, similarity_matrix):
+
+    seen_list = get_seen_movies(ratings, user_id)
+    movie_title = ""
+    similar_movies = []
+    for movie in movies:
+        if int(movie_id) == int(movie[0]):
+            movie_title = movie_title + str(movie[1])
+    # print(movie_title)
+    for index in range(len(movies)):
+        movie = movies[index]
+        if int(movie_id) == int(movie[0]):
+            current_list = list(enumerate(similarity_matrix[int(index)]))
+            # print(current_list)
+            # print(seen_list)
+            for score_tuple in range(len(current_list)):
+                for seen in seen_list:
+                    if int(seen[1]) == int(current_list[score_tuple][0]):
+                        # print('seen ', seen, ' tuple', current_list[score_tuple])
+                        similar_movies.append(current_list[score_tuple])
+    similar_movies_sorted = list(sorted(similar_movies, key=lambda x: x[1], reverse=True))
+    # for movie in movies:
+    #   if int(movie_id) == int(movie[0]):
+            # movie_title = movie_title + str(movie[1])
+    # print(movie_title)
+
+    print('The following movie', movie_title, 'has similar genres as these other movies you rated highly: '
+          , similar_movies_sorted[0][1], ' and ', similar_movies_sorted[1][1], '.')
+
+
+
+
+
+
 
 def recommend(amount, user_id, movies, ratings, sim_matrix):
 
@@ -187,7 +222,7 @@ def recommend(amount, user_id, movies, ratings, sim_matrix):
 
     # some printstatements for testing
     # print(' ')
-    # print('Here\'s the list of movies similar to selected based on movies you rated in the past :')
+    # print('The following movie has similar genres as other movies you rated highly :')
     # print(' ')
     # print(similarity_matrix.shape)
     # for i, s, mid in similar_movies_user[:amount]:
@@ -198,6 +233,7 @@ def recommend(amount, user_id, movies, ratings, sim_matrix):
 
     # create output list in agreed format [(id, score), (id, score), ...] (so without original dataindex
     output = convert_output(similar_movies_user)
+    # print(len(output))
     # convert output to dictionary
     output_dict = dict(output)
     return output_dict
