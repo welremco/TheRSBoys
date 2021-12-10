@@ -21,7 +21,7 @@ train_movie_genres, valid_movie_genres, train_movie_ratings, valid_movie_ratings
                                                                                                           ratings_file)
 # load similarity matrix for cf
 # True, train_movie_ratings)
-similarity_matrix = hk.load_similarity_matrix(False, train_movie_ratings)
+similarity_matrix = hk.load_similarity_matrix(True, train_movie_ratings)
 
 movies, ratings = load(train_movie_ratings)
 similarity_matrix_cb = create_similarity_matrix(movies)
@@ -74,17 +74,21 @@ def hybrid_recommend(user_id, num_predictions=NUM_PREDICTIONS):
                 cf_scores, biggest_contributor = hk.get_cf_results(similarity_matrix, np.transpose(train_movie_ratings), movie_names, user_id)
                 # print('cf:   ', cf_scores)
                 # combination
-                final_output = hybrid_cf_cb_combinator.combine(dict(baseline), 1, cf_scores, 1, cb_scores, 1)
+                final_output = hybrid_cf_cb_combinator.combine(dict(baseline), 0.3, cf_scores, 1, cb_scores, 0.5)
                 print('recommendations : ', final_output)
+
+                for movie in movies:
+                    if int(movie[0]) == final_output[0][0] :
+                        title = movie[1]
                 if int(final_output[0][1][1]) == 1:
-                    print('This movie is recommended to you because it is very popular')
+                    print(title, ' , this movie is recommended to you because it is very popular!')
                 if int(final_output[0][1][1]) == 2:
                     movie_id = final_output[0][0]
                     biggest_contributor_id = biggest_contributor[movie_id]
-                    name = movie_names[biggest_contributor_id]
-                    print('users who liked movie ', name, ' also liked this movie')
+                    print('Users who liked movie ', biggest_contributor_id[0], ' also liked ', title)
                 if int(final_output[0][1][1]) == 3:
                     print_explanation(final_output[0][0], user_id, movies, ratings, similarity_matrix_cb)
+
                 Ap = hybrid_kNN.AP(valid_movie_list, final_output, NUM_PREDICTIONS, 4)
                 Ap_baseline = hybrid_kNN.AP(valid_movie_list, baseline, NUM_PREDICTIONS, 4)
                 total += Ap
