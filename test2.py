@@ -71,7 +71,7 @@ def hybrid_recommend(user_id, num_predictions=NUM_PREDICTIONS):
                 # print('original: ', train_movie_ratings.size)
                 # print('cb:   ', cb_scores)
                 # collaborative
-                cf_scores = hk.get_cf_results(similarity_matrix, np.transpose(train_movie_ratings), movie_names, user_id)
+                cf_scores, biggest_contributor = hk.get_cf_results(similarity_matrix, np.transpose(train_movie_ratings), movie_names, user_id)
                 # print('cf:   ', cf_scores)
                 # combination
                 final_output = hybrid_cf_cb_combinator.combine(dict(baseline), 1, cf_scores, 1, cb_scores, 1)
@@ -79,7 +79,10 @@ def hybrid_recommend(user_id, num_predictions=NUM_PREDICTIONS):
                 if int(final_output[0][1][1]) == 1:
                     print('This movie is recommended to you because it is very popular')
                 if int(final_output[0][1][1]) == 2:
-                    print('this is where the colaborative filtering explanation call must be')
+                    movie_id = final_output[0][0]
+                    biggest_contributor_id = biggest_contributor[movie_id]
+                    name = movie_names[biggest_contributor_id]
+                    print('users who liked movie ', name, ' also liked this movie')
                 if int(final_output[0][1][1]) == 3:
                     print_explanation(final_output[0][0], user_id, movies, ratings, similarity_matrix_cb)
                 Ap = hybrid_kNN.AP(valid_movie_list, final_output, NUM_PREDICTIONS, 4)

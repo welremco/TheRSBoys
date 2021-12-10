@@ -76,6 +76,7 @@ def get_cf_results(similarity_matrix, ratings, movie_names, user_id):
     :return: sorted list of tuples of form (movie_name, predicted_rating)
     """
     recommendations = {}
+    biggest_contributor = [('no movie', 0) for i in range(len(similarity_matrix))]
     watched_movies = np.array([1])
     # watched_movies = np.nonzero(ratings[:, user_id])[0]
     for movie_id in range(len(ratings[:, user_id])):
@@ -85,9 +86,15 @@ def get_cf_results(similarity_matrix, ratings, movie_names, user_id):
             for i in range(len(similarity_array)):
                 if similarity_array[i] != 0 and i not in watched_movies:
                     if i not in recommendations:
-                        recommendations[i] = similarity_array[i]*rating  # *((rating-3)/2)
+                        score = similarity_array[i] * rating
+                        recommendations[i] = score
+                        if score > biggest_contributor[i][1]:
+                            biggest_contributor[i] = (movie_names[movie_id], score)
                     else:
-                        recommendations[i] += similarity_array[i]*rating  # *((rating-3)/2)
+                        score = similarity_array[i] * rating
+                        recommendations[i] += score
+                        if score > biggest_contributor[i][1]:
+                            biggest_contributor[i] = (movie_names[movie_id], score)
     # divide all values by largest absolute value in recommendations
     max_abs = 0
     for movie_id in recommendations:
@@ -97,7 +104,7 @@ def get_cf_results(similarity_matrix, ratings, movie_names, user_id):
         recommendations[movie_id] /= max_abs
 
     # [(k, v) for k, v in sorted(recommendations.items(), key=lambda item: item[1], reverse=True)]
-    return recommendations
+    return recommendations, biggest_contributor
 
 
 def AP(actual, predicted, n=10, min_rating=0):
