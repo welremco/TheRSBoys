@@ -163,7 +163,8 @@ def print_explanation(movie_id, user_id, movies, ratings, similarity_matrix):
     seen_list = get_seen_movies(ratings, user_id)
     movie_title = ""
     similar_movies = []
-    for movie in movies:
+    for index in range(len(movies)):
+        movie = movies[index]
         if int(movie_id) == int(movie[0]):
             movie_title = movie_title + str(movie[1])
     # print(movie_title)
@@ -173,19 +174,28 @@ def print_explanation(movie_id, user_id, movies, ratings, similarity_matrix):
             current_list = list(enumerate(similarity_matrix[int(index)]))
             # print(current_list)
             # print(seen_list)
-            for score_tuple in range(len(current_list)):
-                for seen in seen_list:
-                    if int(seen[1]) == int(current_list[score_tuple][0]):
+            new_list = []
+            for score_tuple in current_list:
+                i = score_tuple[0]
+                id = movies[i][0]
+                new_tuple = (id, score_tuple[1])
+                new_list.append(new_tuple)
+            for seen in seen_list:
+                for item in new_list:
+                    if int(seen[1]) == int(item[0]):
                         # print('seen ', seen, ' tuple', current_list[score_tuple])
-                        similar_movies.append(current_list[score_tuple])
+                        similar_movies.append(item)
     similar_movies_sorted = list(sorted(similar_movies, key=lambda x: x[1], reverse=True))
-    # for movie in movies:
-    #   if int(movie_id) == int(movie[0]):
-            # movie_title = movie_title + str(movie[1])
-    # print(movie_title)
+    movie_title_2 = ""
+    movie_title_3 = ""
+    for movie in movies:
+        if int(similar_movies_sorted[0][0]) == int(movie[0]):
+            movie_title_2 = movie_title_2 + str(movie[1])
+        if int(similar_movies_sorted[1][0]) == int(movie[0]):
+            movie_title_3 = movie_title_3 + str(movie[1])
 
-    print('The following movie', movie_title, 'has similar genres as these other movies you rated highly: '
-          , similar_movies_sorted[0][1], ' and ', similar_movies_sorted[1][1], '.')
+    print('The following movie: ', movie_title, ' is similar to these other movies you rated highly: '
+          , movie_title_2, ', and: ', movie_title_3, '.')
 
 
 
